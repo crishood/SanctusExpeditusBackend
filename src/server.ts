@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import pool from './config/database';
 
 dotenv.config();
 
@@ -17,3 +18,13 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`⚡ Server running on http://localhost:${PORT}`);
 });
+
+(async () => {
+  try {
+    const connection = await pool.getConnection();
+    console.log('✅ MySQL Connected!');
+    connection.release();
+  } catch (error) {
+    console.error('❌ MySQL Connection Failed:', error);
+  }
+})();
