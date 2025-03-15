@@ -3,23 +3,15 @@ import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { validations } from '@app/utils/validations';
 
 export class OrderValidators {
-  static validateCreateOrderInput(
+  async validateCreateOrderInput(
     req: Request,
     res: Response,
     next: NextFunction
-  ) {
-    const {
-      user_id,
-      weight,
-      length,
-      width,
-      height,
-      product_type,
-      destination_address,
-    } = req.body;
+  ): Promise<void> {
+    const { weight, length, width, height, product_type, destination_address } =
+      req.body;
 
     const requiredFields = {
-      user_id,
       weight,
       length,
       width,
@@ -30,7 +22,6 @@ export class OrderValidators {
     const missingFields = Object.entries(requiredFields)
       .filter(([_, value]) => !value)
       .map(([field]) => field);
-
     if (missingFields.length > 0) {
       res.status(400).json({
         success: false,
@@ -55,6 +46,17 @@ export class OrderValidators {
       res.status(400).json({
         success: false,
         error: ERROR_MESSAGES.INVALID_ORDER_FIELDS,
+        statusCode: 400,
+      });
+      return;
+    }
+
+    const isValidAddress =
+      await validations.validateAddress(destination_address);
+    if (!isValidAddress) {
+      res.status(400).json({
+        success: false,
+        error: ERROR_MESSAGES.INVALID_ORDER_ADDRESS,
         statusCode: 400,
       });
       return;

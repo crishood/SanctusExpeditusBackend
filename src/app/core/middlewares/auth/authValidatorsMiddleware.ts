@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import { Request, Response, NextFunction } from 'express';
 import { validations } from '@app/utils/validations';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
-import { MySQLAuthRepository } from '../MySQLAuthRepository';
+import { MySQLAuthRepository } from '../../../features/auth/MySQLAuthRepository';
 import { AuthenticatedRequest } from '@app/core/models/Req.model';
 
 export class AuthValidators {

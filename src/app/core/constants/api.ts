@@ -21,4 +21,7 @@ export const API_ROUTES = {
     UPDATE_ORDER_ROUTE: '/orders/:id/route',
     GET_ORDER_HISTORY: '/orders/:id/history',
   },
+  EXTERNAL: {
+    NOMINATIM: 'https://nominatim.openstreetmap.org/search',
+  },
 };

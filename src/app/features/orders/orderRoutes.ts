@@ -2,14 +2,14 @@ import { Router } from 'express';
 import { OrderController } from './OrderController';
 import { OrderService } from './OrderService';
 import { API_ROUTES } from '@app/core/constants/api';
-import { authenticate } from '@app/core/middleware/auth/authMiddleware';
-import { authorize } from '@app/core/middleware/auth/roleMiddleware';
+import { authenticate } from '@app/core/middlewares/auth/authMiddleware';
+import { authorize } from '@app/core/middlewares/auth/roleMiddleware';
 import { UserRole } from '@app/core/models/User.model';
-import { OrderValidators } from './validators/orderValidators';
+import { OrderValidators } from '@app/core/middlewares/orders/orderMiddleware';
 
 const router = Router();
 const orderController = new OrderController(new OrderService());
-
+const orderValidators = new OrderValidators();
 router.get(
   API_ROUTES.ORDERS.GET_ORDERS,
   authenticate,
@@ -28,7 +28,7 @@ router.post(
   API_ROUTES.ORDERS.CREATE_ORDER,
   authenticate,
   authorize([UserRole.CUSTOMER]),
-  OrderValidators.validateCreateOrderInput,
+  orderValidators.validateCreateOrderInput.bind(orderValidators),
   orderController.createOrder.bind(orderController)
 );
 
