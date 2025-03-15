@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { UserController } from './UserController';
 import { API_ROUTES } from '@app/core/constants/api';
 import { UserService } from './UserService';
-
+import { UserValidators } from './validators/userValidators';
 const router = Router();
 const userController = new UserController(new UserService());
 
@@ -23,6 +23,7 @@ router.get(
 
 router.patch(
   API_ROUTES.USERS.UPDATE_USER,
+  UserValidators.validateUpdateUserInput,
   userController.updateUser.bind(userController)
 );
 
