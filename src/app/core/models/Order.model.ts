@@ -7,6 +7,7 @@ export interface Order {
   height: number;
   product_type: string;
   destination_address: string;
+  delivery_city: string;
   route_id: string;
   status: OrderStatus;
   created_at: Date;

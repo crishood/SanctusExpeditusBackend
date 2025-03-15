@@ -54,6 +54,7 @@ export class OrderController {
         width: req.body.width,
         height: req.body.height,
         product_type: req.body.product_type,
+        delivery_city: req.body.delivery_city,
         destination_address: req.body.destination_address,
       };
       const data = await this._orderService.createOrder(order);

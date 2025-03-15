@@ -8,8 +8,15 @@ export class OrderValidators {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const { weight, length, width, height, product_type, destination_address } =
-      req.body;
+    const {
+      weight,
+      length,
+      width,
+      height,
+      product_type,
+      destination_address,
+      delivery_city,
+    } = req.body;
 
     const requiredFields = {
       weight,
@@ -18,6 +25,7 @@ export class OrderValidators {
       height,
       product_type,
       destination_address,
+      delivery_city,
     };
     const missingFields = Object.entries(requiredFields)
       .filter(([_, value]) => !value)
