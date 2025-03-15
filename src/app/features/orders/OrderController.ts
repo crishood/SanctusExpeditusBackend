@@ -3,6 +3,7 @@ import { OrderService } from './OrderService';
 import { SUCCESS_MESSAGES } from '@app/core/constants/success';
 import { HttpResponse } from '@app/utils/HttpResponse';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
+import { Order } from '@app/core/models/Order.model';
 
 export class OrderController {
   constructor(private _orderService: OrderService) {}
@@ -46,10 +47,19 @@ export class OrderController {
 
   public createOrder: RequestHandler = async (req: Request, res: Response) => {
     try {
-      const order = await this._orderService.createOrder(req.body);
+      const order: Partial<Order> = {
+        user_id: req.body.user.id,
+        weight: req.body.weight,
+        length: req.body.length,
+        width: req.body.width,
+        height: req.body.height,
+        product_type: req.body.product_type,
+        destination_address: req.body.destination_address,
+      };
+      const data = await this._orderService.createOrder(order);
       res.json({
         success: true,
-        data: order,
+        data: data,
         statusCode: 201,
       });
     } catch (error) {

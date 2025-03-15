@@ -20,4 +20,20 @@ export const validations = {
     const validRoles = Object.values(UserRole);
     return validRoles.includes(value as UserRole);
   },
+
+  weight: (value: number): boolean => {
+    return value > 0 && value <= 100;
+  },
+
+  length: (value: number): boolean => {
+    return value > 0 && value <= 3;
+  },
+
+  width: (value: number): boolean => {
+    return value > 0 && value <= 3;
+  },
+
+  height: (value: number): boolean => {
+    return value > 0 && value <= 3;
+  },
 };

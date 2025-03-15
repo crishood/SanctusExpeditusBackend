@@ -19,7 +19,7 @@ export class MySQLOrderRepository implements IOrderRepository {
 
   async createOrder(order: Partial<Order>): Promise<Order> {
     const [result] = await pool.query<ResultSetHeader>(
-      'INSERT INTO orders (user_id, weight, length, width, height, product_type, destination_address, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO orders (user_id, weight, length, width, height, product_type, destination_address) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [
         order.user_id,
         order.weight,
