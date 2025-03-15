@@ -7,7 +7,6 @@ export class UserValidators {
     res: Response,
     next: NextFunction
   ) {
-    const { id } = req.params;
     const updatedFields = req.body;
     const forbiddenFields = ['id', 'created_at', 'role', 'password'];
     const invalidFields = Object.keys(updatedFields).filter((field) =>

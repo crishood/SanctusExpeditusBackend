@@ -8,13 +8,12 @@ export const authenticate = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
-    return res
-      .status(401)
-      .json({ error: ERROR_MESSAGES.ACCESS_DENIED_NO_TOKEN });
+    res.status(401).json({ error: ERROR_MESSAGES.ACCESS_DENIED_NO_TOKEN });
+    return;
   }
 
   try {
