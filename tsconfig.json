@@ -5,6 +5,16 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@config/*": ["config/*"],
+      "@app/*": ["app/*"],
+      "@core/*": ["app/core/*"],
+      "@data/*": ["app/data/*"],
+      "@domain/*": ["app/domain/*"],
+      "@facade/*": ["app/facade/*"],
+      "@features/*": ["app/features/*"]
+    }
   }
 }
