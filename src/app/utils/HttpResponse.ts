@@ -6,6 +6,13 @@ export class HttpResponse {
     return res.status(404).json({ error: message });
   }
 
+  static orderNotFound(
+    res: Response,
+    message = ERROR_MESSAGES.ORDER_NOT_FOUND
+  ) {
+    return res.status(404).json({ error: message });
+  }
+
   static badRequest(res: Response, message: string) {
     return res.status(400).json({ message });
   }

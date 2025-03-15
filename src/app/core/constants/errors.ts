@@ -28,4 +28,6 @@ export const ERROR_MESSAGES = {
     "We couldn't find an account with these details. Need to create one?",
   INVALID_USER_INPUT:
     'Please check your input and try again. Ensure all fields are filled correctly.',
+  ORDER_NOT_FOUND:
+    "We couldn't find an order with these details. Need to create one?",
 };

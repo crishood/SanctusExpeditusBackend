@@ -1,18 +1,18 @@
 import { RequestHandler, Request, Response } from 'express';
-import { UserService } from './UserService';
+import { OrderService } from './OrderService';
 import { SUCCESS_MESSAGES } from '@app/core/constants/success';
 import { HttpResponse } from '@app/utils/HttpResponse';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 
-export class UserController {
-  constructor(private _userService: UserService) {}
+export class OrderController {
+  constructor(private _orderService: OrderService) {}
 
-  public getUsers: RequestHandler = async (req: Request, res: Response) => {
+  public getOrders: RequestHandler = async (req: Request, res: Response) => {
     try {
-      const users = await this._userService.getAllUsers();
+      const orders = await this._orderService.getAllOrders();
       res.json({
         success: true,
-        data: users,
+        data: orders,
         statusCode: 200,
       });
     } catch (error) {
@@ -23,17 +23,17 @@ export class UserController {
     }
   };
 
-  public getUserById: RequestHandler = async (req: Request, res: Response) => {
+  public getOrderById: RequestHandler = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const user = await this._userService.getUserById(id);
-      if (!user) {
-        HttpResponse.userNotFound(res);
+      const order = await this._orderService.getOrderById(id);
+      if (!order) {
+        HttpResponse.orderNotFound(res);
         return;
       }
       res.json({
         success: true,
-        data: user,
+        data: order,
         statusCode: 200,
       });
     } catch (error) {
@@ -44,34 +44,36 @@ export class UserController {
     }
   };
 
-  public getUserByEmail: RequestHandler = async (
+  public createOrder: RequestHandler = async (req: Request, res: Response) => {
+    try {
+      const order = await this._orderService.createOrder(req.body);
+      res.json({
+        success: true,
+        data: order,
+        statusCode: 201,
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+        statusCode: 500,
+      });
+    }
+  };
+
+  public updateOrderStatus: RequestHandler = async (
     req: Request,
     res: Response
   ) => {
     try {
-      const { email } = req.params;
-      const user = await this._userService.getUserByEmail(email);
-      if (!user) {
-        HttpResponse.userNotFound(res);
+      const { id } = req.params;
+      const order = await this._orderService.updateOrderStatus(id, req.body);
+      if (!order) {
+        HttpResponse.orderNotFound(res);
         return;
       }
       res.json({
         success: true,
-        data: user,
-      });
-    } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
-    }
-  };
-
-  public updateUser: RequestHandler = async (req: Request, res: Response) => {
-    try {
-      res.json({
-        success: true,
-        message: SUCCESS_MESSAGES.USER_UPDATED,
+        data: order,
         statusCode: 200,
       });
     } catch (error) {
@@ -82,13 +84,20 @@ export class UserController {
     }
   };
 
-  public deleteUser: RequestHandler = async (req: Request, res: Response) => {
+  public updateOrderRoute: RequestHandler = async (
+    req: Request,
+    res: Response
+  ) => {
     try {
       const { id } = req.params;
-      await this._userService.deleteUser(id);
+      const order = await this._orderService.updateOrderRoute(id, req.body);
+      if (!order) {
+        HttpResponse.orderNotFound(res);
+        return;
+      }
       res.json({
         success: true,
-        message: SUCCESS_MESSAGES.USER_DELETED,
+        data: order,
         statusCode: 200,
       });
     } catch (error) {

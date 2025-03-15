@@ -1,4 +1,3 @@
-import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { IUserRepository } from '@app/core/interfaces/UserRepository';
 import { User } from '@app/core/models/User.model';
 import pool from '@config/database';

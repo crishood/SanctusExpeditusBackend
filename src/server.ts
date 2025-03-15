@@ -5,6 +5,7 @@ import pool from '@config/database';
 import userRoutes from '@features/users/userRoutes';
 import { API_ROUTES } from '@app/core/constants/api';
 import authRoutes from '@app/features/auth/authRoutes';
+import orderRoutes from '@app/features/orders/orderRoutes';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 
 app.use(API_ROUTES.BASE, userRoutes);
 app.use(API_ROUTES.AUTH.BASE, authRoutes);
+app.use(API_ROUTES.BASE, orderRoutes);
 
 app.listen(PORT, () => {
   console.log(`⚡ Server running on http://localhost:${PORT}`);

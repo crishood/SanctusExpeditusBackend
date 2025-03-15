@@ -5,35 +5,35 @@ import { UserService } from './UserService';
 import { UserValidators } from './validators/userValidators';
 import { authenticate } from '@app/core/middleware/auth/authMiddleware';
 import { authorize } from '@app/core/middleware/auth/roleMiddleware';
-
+import { UserRole } from '@app/core/models/User.model';
 const router = Router();
 const userController = new UserController(new UserService());
 
 router.get(
   API_ROUTES.USERS.GET_USERS,
   authenticate,
-  authorize(['admin']),
+  authorize([UserRole.ADMIN]),
   userController.getUsers.bind(userController)
 );
 
 router.get(
   API_ROUTES.USERS.GET_USER_BY_ID,
   authenticate,
-  authorize(['admin']),
+  authorize([UserRole.ADMIN]),
   userController.getUserById.bind(userController)
 );
 
 router.get(
   API_ROUTES.USERS.GET_USER_BY_EMAIL,
   authenticate,
-  authorize(['admin']),
+  authorize([UserRole.ADMIN]),
   userController.getUserByEmail.bind(userController)
 );
 
 router.patch(
   API_ROUTES.USERS.UPDATE_USER,
   authenticate,
-  authorize(['admin', 'user']),
+  authorize([UserRole.ADMIN, UserRole.CUSTOMER]),
   UserValidators.validateUpdateUserInput,
   userController.updateUser.bind(userController)
 );
@@ -41,7 +41,7 @@ router.patch(
 router.delete(
   API_ROUTES.USERS.DELETE_USER,
   authenticate,
-  authorize(['admin']),
+  authorize([UserRole.ADMIN]),
   userController.deleteUser.bind(userController)
 );
 export default router;
