@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { AuthController } from './AuthController';
 import { API_ROUTES } from '@app/core/constants/api';
 import { AuthService } from './AuthService';
-import { AuthValidators } from './validators/authValidators';
+import { AuthValidators } from '@app/core/middlewares/auth/authValidatorsMiddleware';
 import { MySQLAuthRepository } from './MySQLAuthRepository';
 
 const router = Router();

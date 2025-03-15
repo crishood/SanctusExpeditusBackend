@@ -1,7 +1,7 @@
 import { RequestHandler, Request, Response } from 'express';
 import { UserService } from './UserService';
 import { SUCCESS_MESSAGES } from '@app/core/constants/success';
-import { HttpResponse } from '@app/core/middleware/errorHandler/HttpResponse';
+import { HttpResponse } from '@app/utils/HttpResponse';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 
 export class UserController {

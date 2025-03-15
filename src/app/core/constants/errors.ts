@@ -28,4 +28,14 @@ export const ERROR_MESSAGES = {
     "We couldn't find an account with these details. Need to create one?",
   INVALID_USER_INPUT:
     'Please check your input and try again. Ensure all fields are filled correctly.',
+  INVALID_ORDER_INPUT:
+    'Please check your input and try again. Ensure you have filled all the necessary fields for your order.',
+  ORDER_NOT_FOUND:
+    "We couldn't find an order with these details. Need to create one?",
+  INVALID_ORDER_STATUS:
+    'Please check your input and try again. Ensure the status is valid.',
+  INVALID_ORDER_FIELDS:
+    'Please check your order and try again. Remember the max dimensions are 3m x 3m x 3m and the max weight is 100kg.',
+  INVALID_ORDER_ADDRESS:
+    'Please check your address and try again. Ensure it is a valid address.',
 };
