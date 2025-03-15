@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import pool from '@config/database';
 import userRoutes from '@features/users/userRoutes';
 import { API_ROUTES } from '@app/core/constants/api';
+import authRoutes from '@app/features/auth/authRoutes';
 
 dotenv.config();
 
@@ -13,8 +14,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Todas las rutas ahora estarán bajo `/api`
 app.use(API_ROUTES.BASE, userRoutes);
+app.use(API_ROUTES.AUTH.BASE, authRoutes);
 
 app.get('/', (req, res) => {
   res.send('Express + TypeScript Server is running! 🚀');

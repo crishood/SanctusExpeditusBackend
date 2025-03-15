@@ -1,6 +1,26 @@
 import { User } from '@app/core/models/User.model';
-import { getUsersFromDB } from './UserRepository';
+import { MySQLUserRepository } from './MySQLUserRepository';
 
-export const getAllUsers = async (): Promise<User[]> => {
-  return await getUsersFromDB();
-};
+export class UserService {
+  private userRepository: MySQLUserRepository;
+
+  constructor() {
+    this.userRepository = new MySQLUserRepository();
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await this.userRepository.getUsers();
+  }
+
+  async getUserById(id: string): Promise<User | null> {
+    return await this.userRepository.getUserById(id);
+  }
+
+  async updateUser(id: string, user: Partial<User>): Promise<void> {
+    await this.userRepository.updateUser(id, user);
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await this.userRepository.deleteUser(id);
+  }
+}

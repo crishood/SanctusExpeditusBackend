@@ -1,8 +1,9 @@
 export const API_ROUTES = {
   BASE: '/api',
   AUTH: {
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
+    BASE: '/auth',
+    LOGIN: '/login',
+    REGISTER: '/register',
   },
   USERS: {
     GET_USERS: '/users',
