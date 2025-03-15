@@ -1,3 +1,4 @@
+import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { IUserRepository } from '@app/core/interfaces/UserRepository';
 import { User } from '@app/core/models/User.model';
 import pool from '@config/database';
@@ -19,13 +20,22 @@ export class MySQLUserRepository implements IUserRepository {
     return rows.length > 0 ? (rows[0] as User) : null;
   }
 
+  async getUserByEmail(email: string): Promise<User | null> {
+    const [rows] = await pool.query<RowDataPacket[]>(
+      'SELECT id, name, email, role, created_at FROM users WHERE email = ?',
+      [email]
+    );
+    return rows.length > 0 ? (rows[0] as User) : null;
+  }
+
   async updateUser(
     id: string,
-    user: Partial<Omit<User, 'id' | 'created_at'>>
+    user: Partial<Omit<User, 'id' | 'created_at' | 'role' | 'password'>>
   ): Promise<void> {
     const fields = Object.keys(user)
       .map((key) => `${key} = ?`)
       .join(', ');
+
     const values = Object.values(user);
 
     if (fields.length === 0) return;

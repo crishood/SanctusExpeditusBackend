@@ -16,7 +16,12 @@ router.get(
   userController.getUserById.bind(userController)
 );
 
-router.put(
+router.get(
+  API_ROUTES.USERS.GET_USER_BY_EMAIL,
+  userController.getUserByEmail.bind(userController)
+);
+
+router.patch(
   API_ROUTES.USERS.UPDATE_USER,
   userController.updateUser.bind(userController)
 );

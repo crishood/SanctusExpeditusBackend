@@ -2,25 +2,29 @@ import { User } from '@app/core/models/User.model';
 import { MySQLUserRepository } from './MySQLUserRepository';
 
 export class UserService {
-  private userRepository: MySQLUserRepository;
+  private _userRepository: MySQLUserRepository;
 
   constructor() {
-    this.userRepository = new MySQLUserRepository();
+    this._userRepository = new MySQLUserRepository();
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.getUsers();
+    return await this._userRepository.getUsers();
   }
 
   async getUserById(id: string): Promise<User | null> {
-    return await this.userRepository.getUserById(id);
+    return await this._userRepository.getUserById(id);
+  }
+
+  async getUserByEmail(email: string): Promise<User | null> {
+    return await this._userRepository.getUserByEmail(email);
   }
 
   async updateUser(id: string, user: Partial<User>): Promise<void> {
-    await this.userRepository.updateUser(id, user);
+    await this._userRepository.updateUser(id, user);
   }
 
   async deleteUser(id: string): Promise<void> {
-    await this.userRepository.deleteUser(id);
+    await this._userRepository.deleteUser(id);
   }
 }

@@ -4,23 +4,15 @@ import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { UserRole } from '@app/core/models/User.model';
 import { FORM_CONSTANTS } from '@app/core/constants/forms';
 import { IAuthRepository } from '@app/core/interfaces/AuthRepository';
-
+import { MySQLAuthRepository } from './MySQLAuthRepository';
 const JWT_SECRET = process.env.JWT_SECRET || 'default_secret';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 
 export class AuthService {
-  constructor(private _authRepository: IAuthRepository) {}
+  private _authRepository: IAuthRepository;
 
-  private validateUserInput(name: string, email: string, password: string) {
-    if (!FORM_CONSTANTS.REGEX.PASSWORD.test(password)) {
-      throw new Error(ERROR_MESSAGES.INVALID_PASSWORD);
-    }
-    if (!FORM_CONSTANTS.REGEX.EMAIL.test(email)) {
-      throw new Error(ERROR_MESSAGES.INVALID_EMAIL);
-    }
-    if (!FORM_CONSTANTS.REGEX.LETTERS.test(name)) {
-      throw new Error(ERROR_MESSAGES.INVALID_NAME);
-    }
+  constructor() {
+    this._authRepository = new MySQLAuthRepository();
   }
 
   async registerUser(
@@ -29,7 +21,7 @@ export class AuthService {
     password: string,
     role: UserRole
   ) {
-    this.validateUserInput(name, email, password);
+    this._validateUserInput(name, email, password);
 
     const existingUser = await this._authRepository.findUserByEmail(email);
     if (existingUser) {
@@ -65,5 +57,17 @@ export class AuthService {
         role: user.role,
       },
     };
+  }
+
+  private _validateUserInput(name: string, email: string, password: string) {
+    if (!FORM_CONSTANTS.REGEX.PASSWORD.test(password)) {
+      throw new Error(ERROR_MESSAGES.INVALID_PASSWORD);
+    }
+    if (!FORM_CONSTANTS.REGEX.EMAIL.test(email)) {
+      throw new Error(ERROR_MESSAGES.INVALID_EMAIL);
+    }
+    if (!FORM_CONSTANTS.REGEX.LETTERS.test(name)) {
+      throw new Error(ERROR_MESSAGES.INVALID_NAME);
+    }
   }
 }
