@@ -2,17 +2,19 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { UserRole } from '@app/core/models/User.model';
-import { FORM_CONSTANTS } from '@app/core/constants/forms';
-import { IAuthRepository } from '@app/core/interfaces/AuthRepository';
 import { MySQLAuthRepository } from './MySQLAuthRepository';
+import { UserValidator } from './validators/newUserValidator';
+
 const JWT_SECRET = process.env.JWT_SECRET || 'default_secret';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 
 export class AuthService {
-  private _authRepository: IAuthRepository;
+  private _authRepository: MySQLAuthRepository;
+  private _validator: UserValidator;
 
   constructor() {
     this._authRepository = new MySQLAuthRepository();
+    this._validator = new UserValidator(this._authRepository);
   }
 
   async registerUser(
@@ -21,8 +23,6 @@ export class AuthService {
     password: string,
     role: UserRole
   ) {
-    this._validateUserInput(name, email, password);
-
     const existingUser = await this._authRepository.findUserByEmail(email);
     if (existingUser) {
       throw new Error(ERROR_MESSAGES.EMAIL_ALREADY_IN_USE);
@@ -57,17 +57,5 @@ export class AuthService {
         role: user.role,
       },
     };
-  }
-
-  private _validateUserInput(name: string, email: string, password: string) {
-    if (!FORM_CONSTANTS.REGEX.PASSWORD.test(password)) {
-      throw new Error(ERROR_MESSAGES.INVALID_PASSWORD);
-    }
-    if (!FORM_CONSTANTS.REGEX.EMAIL.test(email)) {
-      throw new Error(ERROR_MESSAGES.INVALID_EMAIL);
-    }
-    if (!FORM_CONSTANTS.REGEX.LETTERS.test(name)) {
-      throw new Error(ERROR_MESSAGES.INVALID_NAME);
-    }
   }
 }

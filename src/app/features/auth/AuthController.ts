@@ -12,21 +12,13 @@ export class AuthController {
       await this._authService.registerUser(name, email, password, role);
       res.status(201).json({ message: SUCCESS_MESSAGES.USER_REGISTERED });
     } catch (error) {
-      res.status(400).json({ error: ERROR_MESSAGES.BAD_REQUEST });
+      res.status(500).json({ error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
     }
   };
 
   public login: RequestHandler = async (req, res) => {
     try {
       const { email, password } = req.body;
-
-      if (!email || !password) {
-        res.status(400).json({
-          success: false,
-          error: ERROR_MESSAGES.MISSING_CREDENTIALS,
-        });
-        return;
-      }
 
       const data = await this._authService.loginUser(email, password);
 
@@ -38,7 +30,6 @@ export class AuthController {
     } catch (error: any) {
       const statusCode = error.statusCode || 401;
       const errorMessage = error.message || ERROR_MESSAGES.UNAUTHORIZED;
-
       res.status(statusCode).json({
         success: false,
         error: errorMessage,

@@ -26,4 +26,6 @@ export const ERROR_MESSAGES = {
     'These fields cannot be modified: id, created_at, role, and password. Please adjust your request.',
   USER_NOT_FOUND:
     "We couldn't find an account with these details. Need to create one?",
+  INVALID_USER_INPUT:
+    'Please check your input and try again. Ensure all fields are filled correctly.',
 };

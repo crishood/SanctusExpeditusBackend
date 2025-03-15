@@ -14,12 +14,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use(API_ROUTES.BASE, userRoutes);
-app.use(API_ROUTES.AUTH.BASE, authRoutes);
-
 app.get('/', (req, res) => {
   res.send('Express + TypeScript Server is running! 🚀');
 });
+
+app.use(API_ROUTES.BASE, userRoutes);
+app.use(API_ROUTES.AUTH.BASE, authRoutes);
 
 app.listen(PORT, () => {
   console.log(`⚡ Server running on http://localhost:${PORT}`);

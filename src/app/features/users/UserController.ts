@@ -2,6 +2,7 @@ import { RequestHandler, Request, Response } from 'express';
 import { UserService } from './UserService';
 import { SUCCESS_MESSAGES } from '@app/core/constants/success';
 import { HttpResponse } from '@app/core/middleware/errorHandler/HttpResponse';
+import { ERROR_MESSAGES } from '@app/core/constants/errors';
 
 export class UserController {
   constructor(private _userService: UserService) {}
@@ -11,7 +12,7 @@ export class UserController {
       const users = await this._userService.getAllUsers();
       res.json(users);
     } catch (error) {
-      HttpResponse.internalError(res);
+      throw new Error(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
     }
   };
 
@@ -25,7 +26,7 @@ export class UserController {
       }
       res.json(user);
     } catch (error) {
-      HttpResponse.internalError(res);
+      throw new Error(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
     }
   };
 
@@ -42,7 +43,7 @@ export class UserController {
       }
       res.json(user);
     } catch (error) {
-      HttpResponse.internalError(res);
+      throw new Error(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
     }
   };
 
@@ -56,14 +57,13 @@ export class UserController {
       );
 
       if (invalidFields.length > 0 || Object.keys(updatedFields).length === 0) {
-        HttpResponse.badRequest(res);
-        return;
+        throw new Error(ERROR_MESSAGES.INVALID_USER_INPUT);
       }
 
       await this._userService.updateUser(id, updatedFields);
       res.json({ message: SUCCESS_MESSAGES.USER_UPDATED });
     } catch (error) {
-      HttpResponse.internalError(res);
+      throw new Error(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
     }
   };
 
@@ -73,7 +73,7 @@ export class UserController {
       await this._userService.deleteUser(id);
       res.json({ message: SUCCESS_MESSAGES.USER_DELETED });
     } catch (error) {
-      HttpResponse.internalError(res);
+      throw new Error(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
     }
   };
 }

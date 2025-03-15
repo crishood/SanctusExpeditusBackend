@@ -6,14 +6,19 @@ export class HttpResponse {
     return res.status(404).json({ error: message });
   }
 
-  static badRequest(res: Response, message = ERROR_MESSAGES.BAD_REQUEST) {
-    return res.status(400).json({ error: message });
+  static badRequest(res: Response, message: string) {
+    return res.status(400).json({ message });
   }
 
-  static internalError(
-    res: Response,
-    message = ERROR_MESSAGES.INTERNAL_SERVER_ERROR
-  ) {
-    return res.status(500).json({ error: message });
+  static unauthorized(res: Response, message: string) {
+    return res.status(401).json({ message });
+  }
+
+  static internalError(res: Response, message: string) {
+    return res.status(500).json({ message });
+  }
+
+  static error(res: Response, message: string, statusCode: number) {
+    return res.status(statusCode).json({ error: message });
   }
 }
