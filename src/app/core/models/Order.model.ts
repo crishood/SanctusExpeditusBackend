@@ -7,6 +7,7 @@ export interface Order {
   height: number;
   product_type: string;
   destination_address: string;
+  delivery_city: string;
   route_id: string;
   status: OrderStatus;
   created_at: Date;
@@ -16,6 +17,13 @@ export interface Order {
 export enum OrderStatus {
   PENDING = 'pending',
   IN_TRANSIT = 'in_transit',
-  DELIVERED = 'delivered',
-  CANCELLED = 'canceled',
+  COMPLETED = 'completed',
+  CANCELED = 'canceled',
+}
+
+export interface OrderStatusHistory {
+  id: string;
+  order_id: string;
+  status: OrderStatus;
+  changed_at: Date;
 }

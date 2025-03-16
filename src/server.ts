@@ -6,6 +6,7 @@ import userRoutes from '@features/users/userRoutes';
 import { API_ROUTES } from '@app/core/constants/api';
 import authRoutes from '@app/features/auth/authRoutes';
 import orderRoutes from '@app/features/orders/orderRoutes';
+import routeRoutes from '@app/features/routes/routeRoutes';
 
 dotenv.config();
 
@@ -22,9 +23,12 @@ app.get('/', (req, res) => {
 app.use(API_ROUTES.BASE, userRoutes);
 app.use(API_ROUTES.AUTH.BASE, authRoutes);
 app.use(API_ROUTES.BASE, orderRoutes);
+app.use(API_ROUTES.BASE, routeRoutes);
 
 app.listen(PORT, () => {
-  console.log(`⚡ Server running on http://localhost:${PORT}`);
+  console.log(
+    `🦌 Antiqua et Nova: Ad Maiorem Dei Gloriam et in Honorem Beatissimae Virginis Mariae. http://localhost:${PORT}`
+  );
 });
 
 (async () => {

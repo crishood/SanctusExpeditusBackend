@@ -1,9 +1,10 @@
-import { RequestHandler, Request, Response } from 'express';
+import { RequestHandler, Request, Response, NextFunction } from 'express';
 import { OrderService } from './OrderService';
-import { SUCCESS_MESSAGES } from '@app/core/constants/success';
 import { HttpResponse } from '@app/utils/HttpResponse';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { Order } from '@app/core/models/Order.model';
+import { SUCCESS_MESSAGES } from '@app/core/constants/success';
+import { ReqWithUpdatedOrder } from '@app/core/models/Req.model';
 
 export class OrderController {
   constructor(private _orderService: OrderService) {}
@@ -11,16 +12,9 @@ export class OrderController {
   public getOrders: RequestHandler = async (req: Request, res: Response) => {
     try {
       const orders = await this._orderService.getAllOrders();
-      res.json({
-        success: true,
-        data: orders,
-        statusCode: 200,
-      });
+      HttpResponse.successWithData(res, orders, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -29,19 +23,30 @@ export class OrderController {
       const { id } = req.params;
       const order = await this._orderService.getOrderById(id);
       if (!order) {
-        HttpResponse.orderNotFound(res);
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      res.json({
-        success: true,
-        data: order,
-        statusCode: 200,
-      });
+      HttpResponse.successWithData(res, order, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
+    }
+  };
+
+  public getOrderStatusHistory: RequestHandler = async (
+    req: Request,
+    res: Response
+  ) => {
+    try {
+      const { id } = req.params;
+      const orderStatusHistory =
+        await this._orderService.getOrderStatusHistory(id);
+      if (!orderStatusHistory) {
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
+        return;
+      }
+      HttpResponse.successWithData(res, orderStatusHistory, 200);
+    } catch (error) {
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -54,19 +59,13 @@ export class OrderController {
         width: req.body.width,
         height: req.body.height,
         product_type: req.body.product_type,
+        delivery_city: req.body.delivery_city,
         destination_address: req.body.destination_address,
       };
       const data = await this._orderService.createOrder(order);
-      res.json({
-        success: true,
-        data: data,
-        statusCode: 201,
-      });
+      HttpResponse.successWithData(res, data, 201);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -78,43 +77,58 @@ export class OrderController {
       const { id } = req.params;
       const order = await this._orderService.updateOrderStatus(id, req.body);
       if (!order) {
-        HttpResponse.orderNotFound(res);
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      res.json({
-        success: true,
-        data: order,
-        statusCode: 200,
-      });
+      HttpResponse.successWithData(res, order, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
-  public updateOrderRoute: RequestHandler = async (
-    req: Request,
-    res: Response
-  ) => {
+  async updateOrderRoute(
+    req: ReqWithUpdatedOrder,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { id } = req.params;
-      const order = await this._orderService.updateOrderRoute(id, req.body);
+      const { route_id } = req.body;
+      const order = await this._orderService.updateOrderRoute(id, route_id);
       if (!order) {
-        HttpResponse.orderNotFound(res);
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      res.json({
-        success: true,
-        data: order,
-        statusCode: 200,
-      });
+      req.updatedOrder = order;
+      next();
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      next(error);
     }
-  };
+  }
+
+  async updateTransporterCapacity(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const { route_id } = req.body;
+      const success = await this._orderService.updateTransporterCapacity(
+        route_id,
+        id
+      );
+      if (!success) {
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
+        return;
+      }
+      HttpResponse.success(
+        res,
+        SUCCESS_MESSAGES.TRANSPORTER_CAPACITY_UPDATED,
+        200
+      );
+    } catch (error) {
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
+    }
+  }
 }
