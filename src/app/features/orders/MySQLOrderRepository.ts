@@ -1,6 +1,10 @@
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { IOrderRepository } from '@app/core/interfaces/OrderRepository';
-import { Order, OrderStatus } from '@app/core/models/Order.model';
+import {
+  Order,
+  OrderStatus,
+  OrderStatusHistory,
+} from '@app/core/models/Order.model';
 import { Route, RouteStop } from '@app/core/models/Route.model';
 import { Transporter } from '@app/core/models/Transporter.model';
 import pool from '@config/database';
@@ -18,6 +22,14 @@ export class MySQLOrderRepository implements IOrderRepository {
       [id]
     );
     return rows.length > 0 ? (rows[0] as Order) : null;
+  }
+
+  async getOrderStatusHistory(id: string): Promise<OrderStatusHistory[]> {
+    const [rows] = await pool.query<RowDataPacket[]>(
+      'SELECT * FROM order_status_history WHERE order_id = ?',
+      [id]
+    );
+    return rows as OrderStatusHistory[];
   }
 
   async createOrder(order: Partial<Order>): Promise<Order> {

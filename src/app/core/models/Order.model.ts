@@ -20,3 +20,10 @@ export enum OrderStatus {
   COMPLETED = 'completed',
   CANCELED = 'canceled',
 }
+
+export interface OrderStatusHistory {
+  id: string;
+  order_id: string;
+  status: OrderStatus;
+  changed_at: Date;
+}

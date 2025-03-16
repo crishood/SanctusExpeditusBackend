@@ -19,7 +19,7 @@ export const API_ROUTES = {
     CREATE_ORDER: '/orders',
     UPDATE_ORDER_STATUS: '/orders/:id/status',
     UPDATE_ORDER_ROUTE: '/orders/:id/route',
-    GET_ORDER_HISTORY: '/orders/:id/history',
+    GET_ORDER_STATUS_HISTORY: '/orders/:id/history',
   },
   ROUTES: {
     UPDATE_ROUTE_STATUS: '/routes/:id/status',

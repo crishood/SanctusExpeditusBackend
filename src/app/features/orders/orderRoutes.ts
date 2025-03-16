@@ -24,6 +24,13 @@ router.get(
   orderController.getOrderById.bind(orderController)
 );
 
+router.get(
+  API_ROUTES.ORDERS.GET_ORDER_STATUS_HISTORY,
+  authenticate,
+  authorize([UserRole.ADMIN, UserRole.CUSTOMER]),
+  orderController.getOrderStatusHistory.bind(orderController)
+);
+
 router.post(
   API_ROUTES.ORDERS.CREATE_ORDER,
   authenticate,

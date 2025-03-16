@@ -32,6 +32,24 @@ export class OrderController {
     }
   };
 
+  public getOrderStatusHistory: RequestHandler = async (
+    req: Request,
+    res: Response
+  ) => {
+    try {
+      const { id } = req.params;
+      const orderStatusHistory =
+        await this._orderService.getOrderStatusHistory(id);
+      if (!orderStatusHistory) {
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
+        return;
+      }
+      HttpResponse.successWithData(res, orderStatusHistory, 200);
+    } catch (error) {
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
+    }
+  };
+
   public createOrder: RequestHandler = async (req: Request, res: Response) => {
     try {
       const order: Partial<Order> = {

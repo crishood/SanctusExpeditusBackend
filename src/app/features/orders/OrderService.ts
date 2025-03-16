@@ -1,5 +1,9 @@
 import { MySQLOrderRepository } from './MySQLOrderRepository';
-import { Order, OrderStatus } from '@app/core/models/Order.model';
+import {
+  Order,
+  OrderStatus,
+  OrderStatusHistory,
+} from '@app/core/models/Order.model';
 
 export class OrderService {
   private _orderRepository: MySQLOrderRepository;
@@ -14,6 +18,10 @@ export class OrderService {
 
   async getOrderById(id: string): Promise<Order | null> {
     return await this._orderRepository.getOrderById(id);
+  }
+
+  async getOrderStatusHistory(id: string): Promise<OrderStatusHistory[]> {
+    return await this._orderRepository.getOrderStatusHistory(id);
   }
 
   async createOrder(order: Partial<Order>): Promise<Order> {
