@@ -8,6 +8,7 @@ import {
 import { Route, RouteStop } from '@app/core/models/Route.model';
 import { Transporter } from '@app/core/models/Transporter.model';
 import pool from '@config/database';
+import redis from '@config/redisClient';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 export class MySQLOrderRepository implements IOrderRepository {
@@ -25,10 +26,20 @@ export class MySQLOrderRepository implements IOrderRepository {
   }
 
   async getOrderStatusHistory(id: string): Promise<OrderStatusHistory[]> {
+    const cacheKey = `order_status:${id}`;
+
+    const cachedData = await redis.get(cacheKey);
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
+
     const [rows] = await pool.query<RowDataPacket[]>(
       'SELECT * FROM order_status_history WHERE order_id = ?',
       [id]
     );
+
+    await redis.setex(cacheKey, 60, JSON.stringify(rows));
+
     return rows as OrderStatusHistory[];
   }
 
