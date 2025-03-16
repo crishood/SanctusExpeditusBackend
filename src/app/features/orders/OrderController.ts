@@ -12,16 +12,9 @@ export class OrderController {
   public getOrders: RequestHandler = async (req: Request, res: Response) => {
     try {
       const orders = await this._orderService.getAllOrders();
-      res.json({
-        success: true,
-        data: orders,
-        statusCode: 200,
-      });
+      HttpResponse.successWithData(res, orders, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -33,16 +26,9 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      res.json({
-        success: true,
-        data: order,
-        statusCode: 200,
-      });
+      HttpResponse.successWithData(res, order, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -59,16 +45,9 @@ export class OrderController {
         destination_address: req.body.destination_address,
       };
       const data = await this._orderService.createOrder(order);
-      res.json({
-        success: true,
-        data: data,
-        statusCode: 201,
-      });
+      HttpResponse.successWithData(res, data, 201);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -83,16 +62,9 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      res.json({
-        success: true,
-        data: order,
-        statusCode: 200,
-      });
+      HttpResponse.successWithData(res, order, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -132,16 +104,13 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      res.status(200).json({
-        message: SUCCESS_MESSAGES.TRANSPORTER_CAPACITY_UPDATED,
-        success: true,
-        statusCode: 200,
-      });
+      HttpResponse.success(
+        res,
+        SUCCESS_MESSAGES.TRANSPORTER_CAPACITY_UPDATED,
+        200
+      );
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   }
 }

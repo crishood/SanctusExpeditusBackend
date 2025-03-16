@@ -10,16 +10,9 @@ export class UserController {
   public getUsers: RequestHandler = async (req: Request, res: Response) => {
     try {
       const users = await this._userService.getAllUsers();
-      res.json({
-        success: true,
-        data: users,
-        statusCode: 200,
-      });
+      HttpResponse.successWithData(res, users, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -31,16 +24,9 @@ export class UserController {
         HttpResponse.error(res, ERROR_MESSAGES.USER_NOT_FOUND, 404);
         return;
       }
-      res.json({
-        success: true,
-        data: user,
-        statusCode: 200,
-      });
+      HttpResponse.successWithData(res, user, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -55,30 +41,17 @@ export class UserController {
         HttpResponse.error(res, ERROR_MESSAGES.USER_NOT_FOUND, 404);
         return;
       }
-      res.json({
-        success: true,
-        data: user,
-      });
+      HttpResponse.successWithData(res, user, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
   public updateUser: RequestHandler = async (req: Request, res: Response) => {
     try {
-      res.json({
-        success: true,
-        message: SUCCESS_MESSAGES.USER_UPDATED,
-        statusCode: 200,
-      });
+      HttpResponse.success(res, SUCCESS_MESSAGES.USER_UPDATED, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 
@@ -86,16 +59,9 @@ export class UserController {
     try {
       const { id } = req.params;
       await this._userService.deleteUser(id);
-      res.json({
-        success: true,
-        message: SUCCESS_MESSAGES.USER_DELETED,
-        statusCode: 200,
-      });
+      HttpResponse.success(res, SUCCESS_MESSAGES.USER_DELETED, 200);
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
 }

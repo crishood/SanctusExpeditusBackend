@@ -9,9 +9,9 @@ export interface Route {
 
 export enum RouteStatus {
   PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
+  IN_TRANSIT = 'in_transit',
   COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
+  CANCELED = 'canceled',
 }
 
 export interface RouteStop {
