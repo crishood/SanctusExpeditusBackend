@@ -1,8 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { validations } from '@app/utils/validations';
+import { MySQLOrderRepository } from '@app/features/orders/MySQLOrderRepository';
 
 export class OrderValidators {
+  private _orderRepository: MySQLOrderRepository;
+
+  constructor(orderRepository: MySQLOrderRepository) {
+    this._orderRepository = orderRepository;
+  }
+
   async validateCreateOrderInput(
     req: Request,
     res: Response,
@@ -70,6 +77,22 @@ export class OrderValidators {
       return;
     }
 
+    next();
+  }
+
+  async validateOrderAndRoute(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const { id } = req.params;
+    const { route_id } = req.body;
+    const { success, error } =
+      await this._orderRepository.validateOrderAndRoute(id, route_id);
+    if (!success) {
+      res.status(400).json({ success, error, statusCode: 400 });
+      return;
+    }
     next();
   }
 }

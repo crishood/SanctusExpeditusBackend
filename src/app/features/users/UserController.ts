@@ -28,7 +28,7 @@ export class UserController {
       const { id } = req.params;
       const user = await this._userService.getUserById(id);
       if (!user) {
-        HttpResponse.userNotFound(res);
+        HttpResponse.error(res, ERROR_MESSAGES.USER_NOT_FOUND, 404);
         return;
       }
       res.json({
@@ -52,7 +52,7 @@ export class UserController {
       const { email } = req.params;
       const user = await this._userService.getUserByEmail(email);
       if (!user) {
-        HttpResponse.userNotFound(res);
+        HttpResponse.error(res, ERROR_MESSAGES.USER_NOT_FOUND, 404);
         return;
       }
       res.json({

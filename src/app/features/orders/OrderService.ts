@@ -30,4 +30,14 @@ export class OrderService {
   async updateOrderRoute(id: string, route_id: string): Promise<Order | null> {
     return await this._orderRepository.updateOrderRoute(id, route_id);
   }
+
+  async updateTransporterCapacity(
+    route_id: string,
+    order_id: string
+  ): Promise<boolean> {
+    return await this._orderRepository.updateTransporterCapacity(
+      route_id,
+      order_id
+    );
+  }
 }

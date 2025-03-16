@@ -1,9 +1,9 @@
-import { RequestHandler, Request, Response } from 'express';
+import { RequestHandler, Request, Response, NextFunction } from 'express';
 import { OrderService } from './OrderService';
-import { SUCCESS_MESSAGES } from '@app/core/constants/success';
 import { HttpResponse } from '@app/utils/HttpResponse';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { Order } from '@app/core/models/Order.model';
+import { SUCCESS_MESSAGES } from '@app/core/constants/success';
 
 export class OrderController {
   constructor(private _orderService: OrderService) {}
@@ -29,7 +29,7 @@ export class OrderController {
       const { id } = req.params;
       const order = await this._orderService.getOrderById(id);
       if (!order) {
-        HttpResponse.orderNotFound(res);
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
       res.json({
@@ -79,7 +79,7 @@ export class OrderController {
       const { id } = req.params;
       const order = await this._orderService.updateOrderStatus(id, req.body);
       if (!order) {
-        HttpResponse.orderNotFound(res);
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
       res.json({
@@ -97,18 +97,46 @@ export class OrderController {
 
   public updateOrderRoute: RequestHandler = async (
     req: Request,
-    res: Response
+    res: Response,
+    next: NextFunction
   ) => {
     try {
       const { id } = req.params;
-      const order = await this._orderService.updateOrderRoute(id, req.body);
+      const { route_id } = req.body;
+      const order = await this._orderService.updateOrderRoute(id, route_id);
       if (!order) {
-        HttpResponse.orderNotFound(res);
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
       res.json({
         success: true,
         data: order,
+        statusCode: 200,
+      });
+      next();
+    } catch (error) {
+      res.status(500).json({
+        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+        statusCode: 500,
+      });
+    }
+  };
+
+  public updateTransporterCapacity: RequestHandler = async (
+    req: Request,
+    res: Response
+  ) => {
+    try {
+      const { order_id } = req.params;
+      const { route_id } = req.body;
+      const success = await this._orderService.updateTransporterCapacity(
+        route_id,
+        order_id
+      );
+      res.json({
+        success: true,
+        message: SUCCESS_MESSAGES.TRANSPORTER_CAPACITY_UPDATED,
+        data: success,
         statusCode: 200,
       });
     } catch (error) {

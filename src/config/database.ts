@@ -11,6 +11,16 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  decimalNumbers: true,
+  typeCast: function (field: any, next: any) {
+    if (field.type === 'DECIMAL' || field.type === 'NEWDECIMAL') {
+      return parseFloat(field.string());
+    }
+    if (field.type === 'TINY' && field.length === 1) {
+      return field.string() === '1';
+    }
+    return next();
+  },
 });
 
 export default pool;

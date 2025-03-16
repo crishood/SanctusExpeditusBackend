@@ -122,14 +122,20 @@ export class AuthValidators {
     const user = await this._authRepository.findUserByEmail(email);
 
     if (!user) {
-      res.status(401).json({ error: ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD });
+      res.status(401).json({
+        error: ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD,
+        statusCode: 401,
+      });
       return;
     }
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!isMatch) {
-      res.status(401).json({ error: ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD });
+      res.status(401).json({
+        error: ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD,
+        statusCode: 401,
+      });
       return;
     }
 

@@ -12,7 +12,10 @@ export const authenticate = (
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
-    res.status(401).json({ error: ERROR_MESSAGES.ACCESS_DENIED_NO_TOKEN });
+    res.status(401).json({
+      error: ERROR_MESSAGES.ACCESS_DENIED_NO_TOKEN,
+      statusCode: 401,
+    });
     return;
   }
 
@@ -24,6 +27,9 @@ export const authenticate = (
     req.body.user = decoded;
     next();
   } catch (error) {
-    res.status(403).json({ error: ERROR_MESSAGES.INVALID_TOKEN });
+    res.status(403).json({
+      error: ERROR_MESSAGES.INVALID_TOKEN,
+      statusCode: 403,
+    });
   }
 };

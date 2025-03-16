@@ -3,6 +3,7 @@ import { AuthService } from './AuthService';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { SUCCESS_MESSAGES } from '@app/core/constants/success';
 import { AuthenticatedRequest } from '@app/core/models/Req.model';
+import { HttpResponse } from '@app/utils/HttpResponse';
 
 export class AuthController {
   constructor(private _authService: AuthService) {}
@@ -25,10 +26,7 @@ export class AuthController {
       const { user } = req;
 
       if (!user) {
-        res.status(401).json({
-          error: ERROR_MESSAGES.UNAUTHORIZED,
-          statusCode: 401,
-        });
+        HttpResponse.error(res, ERROR_MESSAGES.UNAUTHORIZED, 401);
         return;
       }
 
