@@ -4,6 +4,7 @@ import { HttpResponse } from '@app/utils/HttpResponse';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { Order } from '@app/core/models/Order.model';
 import { SUCCESS_MESSAGES } from '@app/core/constants/success';
+import { ReqWithUpdatedOrder } from '@app/core/models/Req.model';
 
 export class OrderController {
   constructor(private _orderService: OrderService) {}
@@ -95,11 +96,11 @@ export class OrderController {
     }
   };
 
-  public updateOrderRoute: RequestHandler = async (
-    req: Request,
+  async updateOrderRoute(
+    req: ReqWithUpdatedOrder,
     res: Response,
     next: NextFunction
-  ) => {
+  ) {
     try {
       const { id } = req.params;
       const { route_id } = req.body;
@@ -108,35 +109,32 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      res.json({
-        success: true,
-        data: order,
-        statusCode: 200,
-      });
+      req.updatedOrder = order;
       next();
     } catch (error) {
-      res.status(500).json({
-        error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        statusCode: 500,
-      });
+      next(error);
     }
-  };
+  }
 
-  public updateTransporterCapacity: RequestHandler = async (
+  async updateTransporterCapacity(
     req: Request,
-    res: Response
-  ) => {
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const { order_id } = req.params;
+      const { id } = req.params;
       const { route_id } = req.body;
       const success = await this._orderService.updateTransporterCapacity(
         route_id,
-        order_id
+        id
       );
-      res.json({
-        success: true,
+      if (!success) {
+        HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
+        return;
+      }
+      res.status(200).json({
         message: SUCCESS_MESSAGES.TRANSPORTER_CAPACITY_UPDATED,
-        data: success,
+        success: true,
         statusCode: 200,
       });
     } catch (error) {
@@ -145,5 +143,5 @@ export class OrderController {
         statusCode: 500,
       });
     }
-  };
+  }
 }

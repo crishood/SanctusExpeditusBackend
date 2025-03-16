@@ -32,6 +32,7 @@ export const ERROR_MESSAGES = {
     'Please check your input and try again. Ensure you have filled all the necessary fields for your order.',
   ORDER_NOT_FOUND:
     "We couldn't find an order with these details. Need to create one?",
+  ORDER_ALREADY_HAS_ROUTE: 'The order has already been assigned to this route.',
   ROUTE_NOT_FOUND:
     "We couldn't find a route with these details. Need to create one?",
   INVALID_ORDER_STATUS:

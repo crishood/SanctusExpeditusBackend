@@ -52,15 +52,25 @@ export class MySQLOrderRepository implements IOrderRepository {
     id: string,
     route_id: string
   ): Promise<{ success: boolean; error?: string }> {
-    const [orderResult] = await pool.query(
-      'SELECT delivery_city, weight, width, height, length FROM orders WHERE id = ?',
+    const [orderResult] = await pool.query<RowDataPacket[]>(
+      'SELECT delivery_city, weight, width, height, length, route_id FROM orders WHERE id = ?',
       [id]
     );
     if (!Array.isArray(orderResult) || orderResult.length === 0) {
       return { success: false, error: ERROR_MESSAGES.ORDER_NOT_FOUND };
     }
-    const { delivery_city, weight, width, height, length } =
-      orderResult[0] as Order;
+    const {
+      delivery_city,
+      weight,
+      width,
+      height,
+      length,
+      route_id: existingRouteId,
+    } = orderResult[0] as Order;
+
+    if (existingRouteId === route_id) {
+      return { success: false, error: ERROR_MESSAGES.ORDER_ALREADY_HAS_ROUTE };
+    }
 
     const [routeResult] = await pool.query(
       'SELECT id, transporter_id, destination FROM routes WHERE id = ?',
@@ -116,11 +126,12 @@ export class MySQLOrderRepository implements IOrderRepository {
         max_weight = max_weight - (SELECT weight FROM orders WHERE id = ?),
         max_volume = max_volume - (SELECT width * height * length FROM orders WHERE id = ?)
       WHERE user_id = (SELECT transporter_id FROM routes WHERE id = ?)
-      AND (max_weight - (SELECT weight FROM orders WHERE id = ?)) >= 0
-      AND (max_volume - (SELECT width * height * length FROM orders WHERE id = ?)) >= 0;
+      AND max_weight >= (SELECT weight FROM orders WHERE id = ?)
+      AND max_volume >= (SELECT width * height * length FROM orders WHERE id = ?);
       `,
       [order_id, order_id, route_id, order_id, order_id]
     );
+
     return result.affectedRows > 0;
   }
 }
