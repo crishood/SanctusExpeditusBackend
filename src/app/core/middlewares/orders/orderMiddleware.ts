@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
-import { validations } from '@app/utils/validations';
+import { FormFieldValidator } from '@app/utils/FormFieldValidator';
 import { MySQLOrderRepository } from '@app/features/orders/MySQLOrderRepository';
 
 export class OrderValidators {
@@ -47,10 +47,10 @@ export class OrderValidators {
     }
 
     const validationChecks = {
-      weight: validations.weight(weight),
-      length: validations.length(length),
-      width: validations.width(width),
-      height: validations.height(height),
+      weight: FormFieldValidator.validateWeight(weight),
+      length: FormFieldValidator.validateLength(length),
+      width: FormFieldValidator.validateWidth(width),
+      height: FormFieldValidator.validateHeight(height),
     };
 
     const validationErrors = Object.entries(validationChecks)
@@ -67,7 +67,7 @@ export class OrderValidators {
     }
 
     const isValidAddress =
-      await validations.validateAddress(destination_address);
+      await FormFieldValidator.validateAddress(destination_address);
     if (!isValidAddress) {
       res.status(400).json({
         success: false,

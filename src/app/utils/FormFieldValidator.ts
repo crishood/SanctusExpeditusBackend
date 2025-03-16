@@ -2,44 +2,46 @@ import { UserRole } from '@app/core/models/User.model';
 import { FORM_CONSTANTS } from '@app/core/constants/forms';
 import axios from 'axios';
 import { API_ROUTES } from '@app/core/constants/api';
-export const validations = {
-  name: (value: string): boolean => {
+import { PACKAGE_TYPES } from '@app/core/constants/package';
+
+export class FormFieldValidator {
+  static validateName(value: string): boolean {
     const nameRegex = FORM_CONSTANTS.REGEX.LETTERS;
     return nameRegex.test(value);
-  },
+  }
 
-  email: (value: string): boolean => {
+  static validateEmail(value: string): boolean {
     const emailRegex = FORM_CONSTANTS.REGEX.EMAIL;
     return emailRegex.test(value);
-  },
+  }
 
-  password: (value: string): boolean => {
+  static validatePassword(value: string): boolean {
     const passwordRegex = FORM_CONSTANTS.REGEX.PASSWORD;
     return passwordRegex.test(value);
-  },
+  }
 
-  role: (value: string): boolean => {
+  static validateRole(value: string): boolean {
     const validRoles = Object.values(UserRole);
     return validRoles.includes(value as UserRole);
-  },
+  }
 
-  weight: (value: number): boolean => {
-    return value > 0 && value <= 100;
-  },
+  static validateWeight(value: number): boolean {
+    return value > 0 && value <= PACKAGE_TYPES.MAX_WEIGHT;
+  }
 
-  length: (value: number): boolean => {
-    return value > 0 && value <= 3;
-  },
+  static validateLength(value: number): boolean {
+    return value > 0 && value <= PACKAGE_TYPES.MAX_LENGTH;
+  }
 
-  width: (value: number): boolean => {
-    return value > 0 && value <= 3;
-  },
+  static validateWidth(value: number): boolean {
+    return value > 0 && value <= PACKAGE_TYPES.MAX_WIDTH;
+  }
 
-  height: (value: number): boolean => {
-    return value > 0 && value <= 3;
-  },
+  static validateHeight(value: number): boolean {
+    return value > 0 && value <= PACKAGE_TYPES.MAX_HEIGHT;
+  }
 
-  async validateAddress(address: string): Promise<boolean> {
+  static async validateAddress(address: string): Promise<boolean> {
     try {
       const response = await axios.get(API_ROUTES.EXTERNAL.NOMINATIM, {
         params: { q: address, format: 'json' },
@@ -50,5 +52,5 @@ export const validations = {
       console.error('Error validating address:', error);
       return false;
     }
-  },
-};
+  }
+}

@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response, NextFunction } from 'express';
-import { validations } from '@app/utils/validations';
+import { FormFieldValidator } from '@app/utils/FormFieldValidator';
 import { ERROR_MESSAGES } from '@app/core/constants/errors';
 import { MySQLAuthRepository } from '../../../features/auth/MySQLAuthRepository';
 import { AuthenticatedRequest } from '@app/core/models/Req.model';
@@ -34,10 +34,10 @@ export class AuthValidators {
     }
 
     const validationChecks = {
-      name: validations.name(name),
-      email: validations.email(email),
-      password: validations.password(password),
-      role: validations.role(role),
+      name: FormFieldValidator.validateName(name),
+      email: FormFieldValidator.validateEmail(email),
+      password: FormFieldValidator.validatePassword(password),
+      role: FormFieldValidator.validateRole(role),
     };
 
     const validationErrors = Object.entries(validationChecks)
@@ -73,8 +73,8 @@ export class AuthValidators {
     }
 
     const validationChecks = {
-      email: validations.email(email),
-      password: validations.password(password),
+      email: FormFieldValidator.validateEmail(email),
+      password: FormFieldValidator.validatePassword(password),
     };
 
     const validationErrors = Object.entries(validationChecks)
