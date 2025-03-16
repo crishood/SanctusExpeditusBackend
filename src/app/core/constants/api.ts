@@ -23,7 +23,7 @@ export const API_ROUTES = {
   },
   ROUTES: {
     UPDATE_ROUTE_STATUS: '/routes/:id/status',
-    UPDATE_CURRENT_STOP: '/routes/:id/current-stop',
+    UPDATE_ROUTE_CURRENT_STOP: '/routes/:id/current-stop',
   },
   EXTERNAL: {
     NOMINATIM: 'https://nominatim.openstreetmap.org/search',

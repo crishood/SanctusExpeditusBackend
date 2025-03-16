@@ -16,4 +16,11 @@ router.patch(
   routeController.updateRouteStatus.bind(routeController)
 );
 
+router.patch(
+  API_ROUTES.ROUTES.UPDATE_ROUTE_CURRENT_STOP,
+  authenticate,
+  authorize([UserRole.ADMIN]),
+  routeController.updateRouteCurrentStop.bind(routeController)
+);
+
 export default router;
