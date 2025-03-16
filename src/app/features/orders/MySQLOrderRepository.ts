@@ -38,7 +38,7 @@ export class MySQLOrderRepository implements IOrderRepository {
       [id]
     );
 
-    await redis.setex(cacheKey, 60, JSON.stringify(rows));
+    await redis.setex(cacheKey, 1200, JSON.stringify(rows));
 
     return rows as OrderStatusHistory[];
   }
@@ -68,6 +68,11 @@ export class MySQLOrderRepository implements IOrderRepository {
       'UPDATE orders SET status = ? WHERE id = ?',
       [status, id]
     );
+
+    // Invalidar el caché después de actualizar el estado
+    const cacheKey = `order_status:${id}`;
+    await redis.del(cacheKey);
+
     return result.affectedRows > 0 ? ({ id, status } as Order) : null;
   }
 
@@ -156,5 +161,21 @@ export class MySQLOrderRepository implements IOrderRepository {
     );
 
     return result.affectedRows > 0;
+  }
+
+  async addOrderStatusHistory(
+    orderId: string,
+    status: OrderStatus,
+    comment?: string
+  ): Promise<void> {
+    // Insertar nuevo registro en el historial
+    await pool.query(
+      'INSERT INTO order_status_history (order_id, status, comment) VALUES (?, ?, ?)',
+      [orderId, status, comment]
+    );
+
+    // Invalidar el caché para forzar la próxima consulta a obtener datos frescos
+    const cacheKey = `order_status:${orderId}`;
+    await redis.del(cacheKey);
   }
 }
