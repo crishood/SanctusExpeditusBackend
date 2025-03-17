@@ -43,3 +43,5 @@ app.listen(PORT, () => {
     console.error('❌ MySQL Connection Failed:', error);
   }
 })();
+
+export default app;
