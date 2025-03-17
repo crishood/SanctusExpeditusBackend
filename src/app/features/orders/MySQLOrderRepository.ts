@@ -7,7 +7,7 @@ import {
 } from '@app/core/models/Order.model';
 import { Route, RouteStop } from '@app/core/models/Route.model';
 import { Transporter } from '@app/core/models/Transporter.model';
-import pool from '@config/database';
+import pool from '@config/mySql';
 import redis from '@config/redisClient';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
