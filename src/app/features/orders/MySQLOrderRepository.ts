@@ -69,7 +69,6 @@ export class MySQLOrderRepository implements IOrderRepository {
       [status, id]
     );
 
-    // Invalidar el caché después de actualizar el estado
     const cacheKey = `order_status:${id}`;
     await redis.del(cacheKey);
 
@@ -168,13 +167,11 @@ export class MySQLOrderRepository implements IOrderRepository {
     status: OrderStatus,
     comment?: string
   ): Promise<void> {
-    // Insertar nuevo registro en el historial
     await pool.query(
       'INSERT INTO order_status_history (order_id, status, comment) VALUES (?, ?, ?)',
       [orderId, status, comment]
     );
 
-    // Invalidar el caché para forzar la próxima consulta a obtener datos frescos
     const cacheKey = `order_status:${orderId}`;
     await redis.del(cacheKey);
   }
