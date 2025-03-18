@@ -98,6 +98,7 @@ export class OrderController {
         product_type: req.body.product_type,
         delivery_city: req.body.delivery_city,
         destination_address: req.body.destination_address,
+        user_email: req.body.user_email,
       };
       const data = await this._orderService.createOrder(order);
       HttpResponse.successWithData(
@@ -146,12 +147,6 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      HttpResponse.successWithData(
-        res,
-        SUCCESS_MESSAGES.ORDER_ROUTE_UPDATED,
-        order,
-        200
-      );
       req.updatedOrder = order;
       next();
     } catch (error) {
