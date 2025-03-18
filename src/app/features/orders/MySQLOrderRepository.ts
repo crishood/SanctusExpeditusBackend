@@ -65,7 +65,15 @@ export class MySQLOrderRepository implements IOrderRepository {
         order.destination_address,
       ]
     );
-    return { ...order, id: result.insertId.toString() } as Order;
+
+    const [rows] = await pool.query<RowDataPacket[]>(
+      'SELECT id FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 1',
+      [order.user_id]
+    );
+
+    const orderId = rows[0]?.id;
+
+    return { ...order, order_id: orderId } as Order;
   }
 
   async updateOrderStatus(

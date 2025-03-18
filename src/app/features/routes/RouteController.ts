@@ -46,4 +46,18 @@ export class RouteController {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
   };
+
+  public getRoutes: RequestHandler = async (req: Request, res: Response) => {
+    try {
+      const routes = await this._routeService.getRoutes();
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.ROUTES_FETCHED,
+        routes,
+        200
+      );
+    } catch (error) {
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
+    }
+  };
 }

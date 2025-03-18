@@ -1,4 +1,4 @@
-import { RouteStatus } from '@app/core/models/Route.model';
+import { Route, RouteStatus } from '@app/core/models/Route.model';
 import { MySQLRouteRepository } from './MySQLRouteRepository';
 
 export class RouteService {
@@ -14,5 +14,9 @@ export class RouteService {
 
   async updateCurrentStop(id: string): Promise<boolean> {
     return await this._routeRepository.updateCurrentStop(id);
+  }
+
+  async getRoutes(): Promise<Route[]> {
+    return await this._routeRepository.getRoutes();
   }
 }

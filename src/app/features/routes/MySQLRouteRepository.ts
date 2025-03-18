@@ -1,6 +1,6 @@
 import { IRouteRepository } from '@app/core/interfaces/RouteRepository';
 import { OrderStatus } from '@app/core/models/Order.model';
-import { RouteStatus } from '@app/core/models/Route.model';
+import { Route, RouteStatus } from '@app/core/models/Route.model';
 import pool from '@config/mySql';
 import redis from '@config/redisClient';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
@@ -194,5 +194,10 @@ export class MySQLRouteRepository implements IRouteRepository {
       console.error('Error updating current stop:', error);
       return false;
     }
+  }
+
+  async getRoutes(): Promise<Route[]> {
+    const [rows] = await pool.query<RowDataPacket[]>('SELECT * FROM routes');
+    return rows as Route[];
   }
 }
