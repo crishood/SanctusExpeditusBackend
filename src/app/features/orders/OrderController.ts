@@ -32,6 +32,23 @@ export class OrderController {
     }
   };
 
+  public getOrdersByUserEmail: RequestHandler = async (
+    req: Request,
+    res: Response
+  ) => {
+    try {
+      const { email } = req.body;
+      const orders = await this._orderService.getOrdersByUserEmail(email);
+      if (!orders) {
+        HttpResponse.error(res, ERROR_MESSAGES.USER_NOT_FOUND, 404);
+        return;
+      }
+      HttpResponse.successWithData(res, null, orders, 200);
+    } catch (error) {
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
+    }
+  };
+
   public getOrderStatusHistory: RequestHandler = async (
     req: Request,
     res: Response

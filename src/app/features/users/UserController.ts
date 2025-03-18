@@ -35,7 +35,7 @@ export class UserController {
     res: Response
   ) => {
     try {
-      const { email } = req.params;
+      const { email } = req.body;
       const user = await this._userService.getUserByEmail(email);
       if (!user) {
         HttpResponse.error(res, ERROR_MESSAGES.USER_NOT_FOUND, 404);

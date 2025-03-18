@@ -25,6 +25,14 @@ export class MySQLOrderRepository implements IOrderRepository {
     return rows.length > 0 ? (rows[0] as Order) : null;
   }
 
+  async getOrdersByUserEmail(email: string): Promise<Order[]> {
+    const [rows] = await pool.query<RowDataPacket[]>(
+      'SELECT * FROM orders WHERE user_email = ?',
+      [email]
+    );
+    return rows as Order[];
+  }
+
   async getOrderStatusHistory(id: string): Promise<OrderStatusHistory[]> {
     const cacheKey = `order_status:${id}`;
 

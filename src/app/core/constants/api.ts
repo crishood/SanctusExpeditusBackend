@@ -8,15 +8,16 @@ export const API_ROUTES = {
   USERS: {
     GET_USERS: '/users',
     GET_USER_BY_ID: '/users/:id',
-    GET_USER_BY_EMAIL: '/users/email/:email',
+    GET_USER_BY_EMAIL: '/users/email',
     CREATE_USER: '/users',
     UPDATE_USER: '/users/:id',
     DELETE_USER: '/users/:id',
   },
   ORDERS: {
     GET_ORDERS: '/orders',
-    GET_ORDER_BY_ID: '/orders/:id',
+    GET_ORDER_BY_ID: '/orders/user/:id',
     CREATE_ORDER: '/orders',
+    GET_ORDERS_BY_USER_EMAIL: '/orders/email',
     UPDATE_ORDER_STATUS: '/orders/:id/status',
     UPDATE_ORDER_ROUTE: '/orders/:id/route',
     GET_ORDER_STATUS_HISTORY: '/orders/:id/history',
