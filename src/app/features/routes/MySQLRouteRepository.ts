@@ -1,7 +1,8 @@
 import { IRouteRepository } from '@app/core/interfaces/RouteRepository';
 import { OrderStatus } from '@app/core/models/Order.model';
 import { RouteStatus } from '@app/core/models/Route.model';
-import pool from '@config/database';
+import pool from '@config/mySql';
+import redis from '@config/redisClient';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 export class MySQLRouteRepository implements IRouteRepository {
@@ -72,6 +73,8 @@ export class MySQLRouteRepository implements IRouteRepository {
             `INSERT INTO order_status_history (order_id, status) VALUES ${historyValues}`
           );
         }
+
+        await redis.del(`order_status:${id}`);
 
         await connection.commit();
         connection.release();
@@ -173,6 +176,10 @@ export class MySQLRouteRepository implements IRouteRepository {
               `INSERT INTO order_status_history (order_id, status) VALUES ${remainingHistoryValues}`
             );
           }
+        }
+
+        if (ordersToComplete.length > 0 || nextStopOrder >= total_stops) {
+          await redis.del(`order_status:${id}`);
         }
 
         await connection.commit();

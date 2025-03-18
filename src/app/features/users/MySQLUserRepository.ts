@@ -1,6 +1,6 @@
 import { IUserRepository } from '@app/core/interfaces/UserRepository';
 import { User } from '@app/core/models/User.model';
-import pool from '@config/database';
+import pool from '@config/mySql';
 import { RowDataPacket } from 'mysql2';
 
 export class MySQLUserRepository implements IUserRepository {

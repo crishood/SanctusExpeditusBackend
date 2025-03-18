@@ -7,7 +7,7 @@ import {
 } from '@app/core/models/Order.model';
 import { Route, RouteStop } from '@app/core/models/Route.model';
 import { Transporter } from '@app/core/models/Transporter.model';
-import pool from '@config/database';
+import pool from '@config/mySql';
 import redis from '@config/redisClient';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
@@ -38,7 +38,7 @@ export class MySQLOrderRepository implements IOrderRepository {
       [id]
     );
 
-    await redis.setex(cacheKey, 60, JSON.stringify(rows));
+    await redis.setex(cacheKey, 1200, JSON.stringify(rows));
 
     return rows as OrderStatusHistory[];
   }
@@ -68,6 +68,10 @@ export class MySQLOrderRepository implements IOrderRepository {
       'UPDATE orders SET status = ? WHERE id = ?',
       [status, id]
     );
+
+    const cacheKey = `order_status:${id}`;
+    await redis.del(cacheKey);
+
     return result.affectedRows > 0 ? ({ id, status } as Order) : null;
   }
 
@@ -156,5 +160,19 @@ export class MySQLOrderRepository implements IOrderRepository {
     );
 
     return result.affectedRows > 0;
+  }
+
+  async addOrderStatusHistory(
+    orderId: string,
+    status: OrderStatus,
+    comment?: string
+  ): Promise<void> {
+    await pool.query(
+      'INSERT INTO order_status_history (order_id, status, comment) VALUES (?, ?, ?)',
+      [orderId, status, comment]
+    );
+
+    const cacheKey = `order_status:${orderId}`;
+    await redis.del(cacheKey);
   }
 }

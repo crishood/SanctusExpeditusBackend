@@ -48,6 +48,23 @@ export class AuthValidators {
       res.status(400).json({
         success: false,
         error: ERROR_MESSAGES.INVALID_USER_INPUT,
+        fields: validationErrors,
+        details: validationErrors.map((field) => {
+          switch (field) {
+            case 'name':
+              return ERROR_MESSAGES.INVALID_NAME || 'Invalid name format';
+            case 'email':
+              return ERROR_MESSAGES.INVALID_EMAIL || 'Invalid email format';
+            case 'password':
+              return (
+                ERROR_MESSAGES.INVALID_PASSWORD || 'Invalid password format'
+              );
+            case 'role':
+              return ERROR_MESSAGES.INVALID_ROLE || 'Invalid role';
+            default:
+              return 'Invalid field';
+          }
+        }),
         statusCode: 400,
       });
       return;
@@ -85,8 +102,22 @@ export class AuthValidators {
       res.status(400).json({
         success: false,
         error: ERROR_MESSAGES.INVALID_USER_INPUT,
+        fields: validationErrors,
+        details: validationErrors.map((field) => {
+          switch (field) {
+            case 'email':
+              return ERROR_MESSAGES.INVALID_EMAIL || 'Invalid email format';
+            case 'password':
+              return (
+                ERROR_MESSAGES.INVALID_PASSWORD || 'Invalid password format'
+              );
+            default:
+              return 'Invalid field';
+          }
+        }),
         statusCode: 400,
       });
+      return;
     }
     next();
   }

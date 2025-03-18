@@ -1,4 +1,4 @@
-import pool from '@config/database';
+import pool from '@config/mySql';
 import { User } from '@app/core/models/User.model';
 import { IAuthRepository } from '@app/core/interfaces/AuthRepository';
 import { RowDataPacket } from 'mysql2';

@@ -12,7 +12,7 @@ export class OrderController {
   public getOrders: RequestHandler = async (req: Request, res: Response) => {
     try {
       const orders = await this._orderService.getAllOrders();
-      HttpResponse.successWithData(res, orders, 200);
+      HttpResponse.successWithData(res, null, orders, 200);
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -26,7 +26,7 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      HttpResponse.successWithData(res, order, 200);
+      HttpResponse.successWithData(res, null, order, 200);
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -44,7 +44,7 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      HttpResponse.successWithData(res, orderStatusHistory, 200);
+      HttpResponse.successWithData(res, null, orderStatusHistory, 200);
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -63,7 +63,7 @@ export class OrderController {
         destination_address: req.body.destination_address,
       };
       const data = await this._orderService.createOrder(order);
-      HttpResponse.successWithData(res, data, 201);
+      HttpResponse.successWithData(res, null, data, 201);
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -80,7 +80,7 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      HttpResponse.successWithData(res, order, 200);
+      HttpResponse.successWithData(res, null, order, 200);
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
