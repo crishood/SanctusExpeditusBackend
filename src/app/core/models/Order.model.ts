@@ -12,6 +12,7 @@ export interface Order {
   status: OrderStatus;
   created_at: Date;
   delivered_at: Date;
+  user_email: string;
 }
 
 export enum OrderStatus {

@@ -20,6 +20,10 @@ export class OrderService {
     return await this._orderRepository.getOrderById(id);
   }
 
+  async getOrdersByUserEmail(email: string): Promise<Order[]> {
+    return await this._orderRepository.getOrdersByUserEmail(email);
+  }
+
   async getOrderStatusHistory(id: string): Promise<OrderStatusHistory[]> {
     return await this._orderRepository.getOrderStatusHistory(id);
   }

@@ -12,7 +12,12 @@ export class OrderController {
   public getOrders: RequestHandler = async (req: Request, res: Response) => {
     try {
       const orders = await this._orderService.getAllOrders();
-      HttpResponse.successWithData(res, null, orders, 200);
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.ORDERS_FETCHED,
+        orders,
+        200
+      );
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -26,7 +31,34 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      HttpResponse.successWithData(res, null, order, 200);
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.ORDER_FETCHED,
+        order,
+        200
+      );
+    } catch (error) {
+      HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
+    }
+  };
+
+  public getOrdersByUserEmail: RequestHandler = async (
+    req: Request,
+    res: Response
+  ) => {
+    try {
+      const { email } = req.body;
+      const orders = await this._orderService.getOrdersByUserEmail(email);
+      if (!orders) {
+        HttpResponse.error(res, ERROR_MESSAGES.USER_NOT_FOUND, 404);
+        return;
+      }
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.ORDERS_FETCHED,
+        orders,
+        200
+      );
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -44,7 +76,12 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      HttpResponse.successWithData(res, null, orderStatusHistory, 200);
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.ORDER_STATUS_HISTORY_FETCHED,
+        orderStatusHistory,
+        200
+      );
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -61,9 +98,15 @@ export class OrderController {
         product_type: req.body.product_type,
         delivery_city: req.body.delivery_city,
         destination_address: req.body.destination_address,
+        user_email: req.body.user_email,
       };
       const data = await this._orderService.createOrder(order);
-      HttpResponse.successWithData(res, null, data, 201);
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.ORDER_CREATED,
+        data,
+        201
+      );
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -80,7 +123,12 @@ export class OrderController {
         HttpResponse.error(res, ERROR_MESSAGES.ORDER_NOT_FOUND, 404);
         return;
       }
-      HttpResponse.successWithData(res, null, order, 200);
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.ORDER_STATUS_UPDATED,
+        order,
+        200
+      );
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }

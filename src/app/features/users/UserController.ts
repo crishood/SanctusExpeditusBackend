@@ -10,7 +10,12 @@ export class UserController {
   public getUsers: RequestHandler = async (req: Request, res: Response) => {
     try {
       const users = await this._userService.getAllUsers();
-      HttpResponse.successWithData(res, null, users, 200);
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.USERS_FETCHED,
+        users,
+        200
+      );
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -24,7 +29,12 @@ export class UserController {
         HttpResponse.error(res, ERROR_MESSAGES.USER_NOT_FOUND, 404);
         return;
       }
-      HttpResponse.successWithData(res, null, user, 200);
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.USER_FETCHED,
+        user,
+        200
+      );
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
@@ -35,13 +45,18 @@ export class UserController {
     res: Response
   ) => {
     try {
-      const { email } = req.params;
+      const { email } = req.body;
       const user = await this._userService.getUserByEmail(email);
       if (!user) {
         HttpResponse.error(res, ERROR_MESSAGES.USER_NOT_FOUND, 404);
         return;
       }
-      HttpResponse.successWithData(res, null, user, 200);
+      HttpResponse.successWithData(
+        res,
+        SUCCESS_MESSAGES.USER_FETCHED,
+        user,
+        200
+      );
     } catch (error) {
       HttpResponse.error(res, ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
     }
