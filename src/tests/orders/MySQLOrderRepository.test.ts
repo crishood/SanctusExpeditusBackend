@@ -173,15 +173,20 @@ describe('MySQLOrderRepository', () => {
         product_type: 'electronics',
         delivery_city: 'New York',
         destination_address: '123 Main St',
+        user_email: 'user1@example.com',
       };
 
-      const mockResult = [{ insertId: 1 }, []];
-      (pool.query as jest.Mock).mockResolvedValue(mockResult);
+      const mockInsertResult = [{ insertId: 1 }, []];
+      const mockSelectResult = [[{ id: '1' }], []];
+
+      (pool.query as jest.Mock)
+        .mockResolvedValueOnce(mockInsertResult)
+        .mockResolvedValueOnce(mockSelectResult);
 
       const result = await orderRepository.createOrder(newOrder);
 
       expect(pool.query).toHaveBeenCalledWith(
-        'INSERT INTO orders (user_id, weight, length, width, height, product_type, delivery_city, destination_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO orders (user_id, weight, length, width, height, product_type, delivery_city, destination_address, user_email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           newOrder.user_id,
           newOrder.weight,
@@ -191,9 +196,14 @@ describe('MySQLOrderRepository', () => {
           newOrder.product_type,
           newOrder.delivery_city,
           newOrder.destination_address,
+          newOrder.user_email,
         ]
       );
-      expect(result).toEqual({ ...newOrder, id: '1' });
+      expect(pool.query).toHaveBeenCalledWith(
+        'SELECT id FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 1',
+        [newOrder.user_id]
+      );
+      expect(result).toEqual({ ...newOrder, order_id: '1' });
     });
   });
 
