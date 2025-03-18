@@ -1,7 +1,7 @@
 {
   "name": "sanctusexpeditusbackend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Logistics API to send packages from Medellin to any city in Colombia",
   "main": "index.js",
   "scripts": {
     "test": "jest --detectOpenHandles",
@@ -11,8 +11,8 @@
     "start": "node dist/server.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "CrisHood",
+  "license": "MIT",
   "dependencies": {
     "axios": "^1.8.3",
     "bcryptjs": "^3.0.2",

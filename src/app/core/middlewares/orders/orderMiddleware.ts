@@ -40,7 +40,7 @@ export class OrderValidators {
     if (missingFields.length > 0) {
       res.status(400).json({
         success: false,
-        error: ERROR_MESSAGES.INVALID_ORDER_INPUT,
+        error: `${ERROR_MESSAGES.INVALID_ORDER_INPUT}: Missing required fields [${missingFields.join(', ')}]`,
         statusCode: 400,
       });
       return;

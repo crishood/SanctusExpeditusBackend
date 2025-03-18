@@ -1,10 +1,12 @@
+import { PACKAGE_TYPES } from './package';
+import { UserRole } from '@app/core/models/User.model';
 export const ERROR_MESSAGES = {
   INTERNAL_SERVER_ERROR:
     'Oops! Something went wrong on our end. Our team has been notified and is working on it.',
   NOT_FOUND: "We looked everywhere, but couldn't find what you're looking for.",
   BAD_REQUEST:
     "Something's not quite right with this request. Please check your input and try again.",
-  UNAUTHORIZED: "Hold on! You'll need to sign in to access this.",
+  UNAUTHORIZED: 'Hold on! You need to sign in to access this.',
   FORBIDDEN: 'Sorry, this area is off-limits for your current access level.',
   EMAIL_ALREADY_IN_USE:
     'This email is already taken. Please try another one or sign in if this is you.',
@@ -16,8 +18,9 @@ export const ERROR_MESSAGES = {
     'Your session token is missing. Please sign in again to continue.',
   INVALID_TOKEN:
     'Your session has expired or is invalid. Please sign in again to continue.',
+  INVALID_ROLE: `Please enter a valid role: ${Object.values(UserRole).join(', ')}`,
   INVALID_PASSWORD:
-    'Your password needs to be at least 8 characters long and include: \n• One uppercase letter\n• One lowercase letter\n• One number\n• One special character',
+    'Your password needs to be at least 8 characters long and include: \n• One uppercase letter\n• One lowercase letter\n• One number\n• One special character(e.g., !@#$%^&.,)',
   INVALID_EMAIL: 'Please enter a valid email address (e.g., name@example.com)',
   INVALID_NAME:
     'Please enter a valid name using letters and common special characters',
@@ -37,8 +40,7 @@ export const ERROR_MESSAGES = {
     "We couldn't find a route with these details. Need to create one?",
   INVALID_ORDER_STATUS:
     'Please check your input and try again. Ensure the status is valid.',
-  INVALID_ORDER_FIELDS:
-    'Please check your order and try again. Remember the max dimensions are 3m x 3m x 3m and the max weight is 100kg.',
+  INVALID_ORDER_FIELDS: `Please check your order and try again. Remember the max dimensions are ${PACKAGE_TYPES.MAX_LENGTH}cm x ${PACKAGE_TYPES.MAX_WIDTH}cm x ${PACKAGE_TYPES.MAX_HEIGHT}cm and the max weight is ${PACKAGE_TYPES.MAX_WEIGHT}kg.`,
   INVALID_ORDER_ADDRESS:
     'Please check your address and try again. Ensure it is a valid address.',
   PACKAGE_TOO_BIG:

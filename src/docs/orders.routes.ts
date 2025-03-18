@@ -35,13 +35,13 @@ const orderController = new OrderController(new OrderService());
  *           description: Weight of the package in kilograms
  *         length:
  *           type: number
- *           description: Length of the package in meters
+ *           description: Length of the package in centimeters
  *         width:
  *           type: number
- *           description: Width of the package in meters
+ *           description: Width of the package in centimeters
  *         height:
  *           type: number
- *           description: Height of the package in meters
+ *           description: Height of the package in centimeters
  *         product_type:
  *           type: string
  *           description: Type of product being shipped

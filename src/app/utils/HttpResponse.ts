@@ -9,7 +9,12 @@ export class HttpResponse {
     return res.status(statusCode).json({ message, statusCode });
   }
 
-  static successWithData(res: Response, data: any, statusCode: number) {
-    return res.status(statusCode).json({ data, statusCode });
+  static successWithData(
+    res: Response,
+    message: string | null = '✅🍋',
+    data: any,
+    statusCode: number
+  ) {
+    return res.status(statusCode).json({ message, data, statusCode });
   }
 }
