@@ -25,6 +25,14 @@ export class MySQLOrderRepository implements IOrderRepository {
     return rows.length > 0 ? (rows[0] as Order) : null;
   }
 
+  async getOrdersByUserEmail(email: string): Promise<Order[]> {
+    const [rows] = await pool.query<RowDataPacket[]>(
+      'SELECT * FROM orders WHERE user_email = ?',
+      [email]
+    );
+    return rows as Order[];
+  }
+
   async getOrderStatusHistory(id: string): Promise<OrderStatusHistory[]> {
     const cacheKey = `order_status:${id}`;
 
@@ -45,7 +53,7 @@ export class MySQLOrderRepository implements IOrderRepository {
 
   async createOrder(order: Partial<Order>): Promise<Order> {
     const [result] = await pool.query<ResultSetHeader>(
-      'INSERT INTO orders (user_id, weight, length, width, height, product_type, delivery_city, destination_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO orders (user_id, weight, length, width, height, product_type, delivery_city, destination_address, user_email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         order.user_id,
         order.weight,
@@ -55,9 +63,18 @@ export class MySQLOrderRepository implements IOrderRepository {
         order.product_type,
         order.delivery_city,
         order.destination_address,
+        order.user_email,
       ]
     );
-    return { ...order, id: result.insertId.toString() } as Order;
+
+    const [rows] = await pool.query<RowDataPacket[]>(
+      'SELECT id FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 1',
+      [order.user_id]
+    );
+
+    const orderId = rows[0]?.id;
+
+    return { ...order, order_id: orderId } as Order;
   }
 
   async updateOrderStatus(

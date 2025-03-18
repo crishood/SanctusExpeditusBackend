@@ -23,4 +23,11 @@ router.patch(
   routeController.updateRouteCurrentStop.bind(routeController)
 );
 
+router.get(
+  API_ROUTES.ROUTES.GET_ROUTES,
+  authenticate,
+  authorize([UserRole.ADMIN]),
+  routeController.getRoutes.bind(routeController)
+);
+
 export default router;
