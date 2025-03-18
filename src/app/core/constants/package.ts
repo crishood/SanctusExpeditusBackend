@@ -1,0 +1,6 @@
+export const PACKAGE_TYPES = {
+  MAX_WEIGHT: 50,
+  MAX_LENGTH: 150,
+  MAX_WIDTH: 150,
+  MAX_HEIGHT: 150,
+};
